@@ -4,9 +4,13 @@ This repo will teach you how to install and run simple TensorFlow programs in Re
 ## What is Renode?
 
 ```bash
-docker build -t renode_tf .
+docker build --no-cache -t renode_tf .
 ```
 
 ```bash
 ./run.sh
+```
+
+```bash
+./enter.sh
 ```
