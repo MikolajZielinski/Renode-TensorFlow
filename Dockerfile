@@ -21,6 +21,9 @@ RUN mkdir -p /root/Arduino/libraries
 WORKDIR /root/Arduino/libraries
 RUN git clone https://github.com/tensorflow/tflite-micro-arduino-examples Arduino_TensorFlowLite
 
+# TensorFlow Renode Serial Monitor patch
+RUN sed -i'' '/#define DEBUG_SERIAL_OBJECT/s/(Serial)/(Serial1)/' /root/Arduino/libraries/Arduino_TensorFlowLite/src/tensorflow/lite/micro/system_setup.cpp
+
 # Install Renode
 WORKDIR /
 RUN git clone https://github.com/renode/renode.git
