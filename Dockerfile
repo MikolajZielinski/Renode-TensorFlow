@@ -7,7 +7,7 @@ RUN mkdir workspace
 RUN apt update -y && apt upgrade -y
 RUN apt install -y wget unzip
 RUN apt install -y git automake autoconf libtool g++ coreutils policykit-1 libgtk2.0-dev uml-utilities gtk-sharp2 python3 python3-pip
-RUN apt install -y libasound2 libsecret-1-dev libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev
+RUN apt install -y libasound2 libsecret-1-dev libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev kmod
 
 # Install Arduino IDE
 RUN wget https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.2_Linux_64bit.zip

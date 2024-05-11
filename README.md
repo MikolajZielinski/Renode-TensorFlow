@@ -74,8 +74,8 @@ Now open a new terminal inside docker and start the ArduinoIDE.
 arduino-ide --no-sandbox
 ```
 
-Navigate to the `Files > Examples > 01.Basics` and open `Blink`.
-Now we have to save the project in our workspace so go to in `Files > Save As...` and on the left hand side choose `workspace` as a directory and click `Save`.
+Navigate to the `Files -> Examples -> 01.Basics` and open `Blink`.
+Now we have to save the project in our workspace so go to in `Files -> Save As...` and on the left hand side choose `workspace` as a directory and click `Save`.
 
 Next step is to choose our board click on `Select Board` on the top bar and then click `Select other board and port...` from the drop down list choose `Arduino Nano 33 BLE Sense`. Then in the bottom right corner the prompt will appear asking if you would like to install board dependenices choose `Yes`.
 
@@ -125,7 +125,7 @@ docker rmi renode_tf
 
 ### Task for you
 
-Make a program which will turn send `"ON"` message over serial port when the LED is on and `"OFF"` otherwise.
+Make a program which will send `"ON"` message over serial port when the LED is on and `"OFF"` otherwise.
 
 To see what is coming on uart use the command
 
@@ -137,4 +137,32 @@ showAnalyzer sysbus.uart0
 
 ## Running TensorFlow
 
-https://renode.readthedocs.io/en/latest/host-integration/arduino.html
+TensorFlowLite is preinstalled in this docker image. We will run `hello world` example from `File -> Examples -> Arduino_TensorFlowLite`. In this example a model is trying to predict sine wave values in a loop and is printing them to the uart. Open, save and compile the code same way as previously, then run it in Renode with
+
+```bash
+using sysbus
+mach create "Arduino Nano 33 BLE Sense"
+machine LoadPlatformDescription @platforms/boards/arduino_nano_33_ble.repl
+
+# You may need to change the path
+sysbus LoadELF @/workspace/hello_world/build/arduino.mbed_nano.nano33ble/hello_world.ino.elf
+
+start
+```
+We can observe sine wave values with command
+
+```bash
+showAnalyzer sysbus.uart0
+```
+
+### Task for you
+
+You can find informations on how to prepare, train, and compile model for uploading into Arduino in [this](https://www.youtube.com/watch?v=BzzqYNYOcWc) and [this](https://www.youtube.com/watch?v=dU01M61RW8s&t=37s) tutorials. Based on them create a model which will be bahaving as XOR logic gate. Make it work in a loop and print input values and output result into serial port.
+
+The final output should look like this:
+```
+0 0 | 0
+0 1 | 1
+1 0 | 1
+1 1 | 0
+```
