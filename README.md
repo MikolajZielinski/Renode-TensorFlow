@@ -2,11 +2,11 @@
 This repo will teach you how to install and run simple TensorFlow programs in Renode. We will use simulated Arduino Nano 33 BLE Sense board to run our code.
 
 ## What is Renode?
-Renode is an open source software developed by Antmicro. It allows you to create, develop and test multinode IoT system on your local machine. Big advantage of of Renode is that you can upload the same binary code to your simulated environment and to your boards and it will work exactly the same.
+[Renode](https://renode.io/) is an open source software developed by Antmicro. It allows you to create, develop and test multi-node IoT system on your local machine. Big advantage of of Renode is that you can upload the same binary code to your simulated environment and your boards and it will work exactly the same.
 
 ## Getting started
 
-We will use docker in this tutorial but no worries you don't need to understand docker to do all the tasks .
+We will use docker in this tutorial but no worries you don't need to understand docker to do all tasks. If you don'h have docer installed in your system you can follow [this](https://docs.docker.com/engine/install/ubuntu/) tutorial.
 
 Use below comand do build docker image with preinstalled ArduinoIDE, Renode and TensorFlowLite. Make yourself a :coffee: because it may take a while 
 ```bash
@@ -54,7 +54,7 @@ mach create "Arduino Nano 33 BLE Sense"
 machine LoadPlatformDescription @platforms/boards/arduino_nano_33_ble.repl
 ```
 Machines in Renode as name suggests are separate devices you can simulate. 
-In Renode it is possible to have multiple machines but for the sake of this tutorial we will only use one. You can check what kind of preconfigured boards are avaliable on [renode docks](https://renode.readthedocs.io/en/latest/introduction/supported-boards.html) or configure [your own](https://renode.readthedocs.io/en/latest/advanced/platform_description_format.html) with its peripherials.
+In Renode it is possible to have multiple machines but for the sake of this tutorial we will only use one. You can check what kind of preconfigured boards are avaliable on [renode docs](https://renode.readthedocs.io/en/latest/introduction/supported-boards.html) or configure [your own](https://renode.readthedocs.io/en/latest/advanced/platform_description_format.html) with its peripherials.
 
 
 Let's take a look at `Arduino Nano 33 BLE Sense` peripherals with the command.
@@ -66,7 +66,7 @@ We can see among others `gpio0`, `uart0`, `uart1`. We will make use of them in t
 
 ### Uploading Blink to the board
 
-Blink is a simple "Hello World!" like program wihich is blinkin a LED on the Arduino borads connected to the pin 13.
+Blink is a simple "Hello World!" like program wihich is turning ON and OFF an LED on the Arduino borads connected to the pin 13.
 
 Now open a new terminal inside docker and start the ArduinoIDE.
 
@@ -75,7 +75,7 @@ arduino-ide --no-sandbox
 ```
 
 Navigate to the `Files -> Examples -> 01.Basics` and open `Blink`.
-Now we have to save the project in our workspace so go to in `Files -> Save As...` and on the left hand side choose `workspace` as a directory and click `Save`.
+Now we have to save the project in our workspace so go to `Files -> Save As...` In the window that pop up on the left hand side choose `workspace` as a directory and click `Save`.
 
 Next step is to choose our board click on `Select Board` on the top bar and then click `Select other board and port...` from the drop down list choose `Arduino Nano 33 BLE Sense`. Then in the bottom right corner the prompt will appear asking if you would like to install board dependenices choose `Yes`.
 
@@ -116,12 +116,8 @@ To pause or quit simply use
 pause
 quit
 ```
-Once finished with this tutorial you can just remove the docker image
-```bash
-docker rmi renode_tf
-```
 
-> :warning: **Warning** : In theory to upload new code to the board you should pause it upload the code and start it again. It never worked for me that way. Each time I had to use `Clear` command and configure the board once again. It is very frustrating but at the moment of writing this, it is the only solution I found to this problem.
+> :warning: **Warning** : To upload new code to the board you should pause it upload the code and start the simulation again. Unfortunately, it never worked for me that way. Each time I had to use `Clear` command and configure the board once again. At the moment I couldn't find a solution for that problem. Maybe future releases of Renode will resolve the issue.
 
 ### Task for you
 
@@ -137,7 +133,7 @@ showAnalyzer sysbus.uart0
 
 ## Running TensorFlow
 
-TensorFlowLite is preinstalled in this docker image. We will run `hello world` example from `File -> Examples -> Arduino_TensorFlowLite`. In this example a model is trying to predict sine wave values in a loop and is printing them to the uart. Open, save and compile the code same way as previously, then run it in Renode with
+TensorFlowLite is preinstalled in this docker image. We will run `hello world` example from `File -> Examples -> Arduino_TensorFlowLite` in ArduinoIDE. In this example a model is trying to predict sine wave values and is printing them to the uart. Open, save and compile the code same way as previously, then run it in Renode with
 
 ```bash
 using sysbus
@@ -157,7 +153,7 @@ showAnalyzer sysbus.uart0
 
 ### Task for you
 
-You can find informations on how to prepare, train, and compile model for uploading into Arduino in [this](https://www.youtube.com/watch?v=BzzqYNYOcWc) and [this](https://www.youtube.com/watch?v=dU01M61RW8s&t=37s) tutorials. Based on them create a model which will be bahaving as XOR logic gate. Make it work in a loop and print input values and output result into serial port.
+You can find informations on how to prepare, train, and compile model for uploading it into Arduino in [this](https://www.youtube.com/watch?v=BzzqYNYOcWc) and [this](https://www.youtube.com/watch?v=dU01M61RW8s&t=37s) tutorial. Based on them create a model which will be bahaving as XOR logic gate. Make it work in a loop and print input values and output result into serial port.
 
 The final output should look like this:
 ```
@@ -165,4 +161,15 @@ The final output should look like this:
 0 1 | 1
 1 0 | 1
 1 1 | 0
+```
+
+### Advanced version
+
+Create another board which will be outputing binary sequence on its GPIO pins. Read the sequence with the board with XOR TensorFlow model. Send the response over uart to the firs board and display the result. [This tutoarial](https://renode.readthedocs.io/en/latest/networking/machine-to-machine-connections.html) shows how you can connect two boards together. 
+
+## Removing the docker image from the system
+
+Once finished with this tutorial you can remove the docker image
+```bash
+docker rmi renode_tf
 ```
